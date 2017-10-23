@@ -24,16 +24,14 @@ app.on('ready', function() {
     // ブラウザ(Chromium)の起動, 初期画面のロード
     const {size} = electron.screen.getPrimaryDisplay()
     mainWindow = new BrowserWindow({
-        left: 0,
-        top: 0,
         "transparent": true,    // ウィンドウの背景を透過
         "frame": false,     // 枠の無いウィンドウ
         "resizable": false,  // ウィンドウのリサイズを禁止
-        "alwaysOnTop": true
+        "alwaysOnTop": true //最前面表示
 	});
     mainWindow.setIgnoreMouseEvents(false)
-    mainWindow.maximize();
-    mainWindow.setFullScreen(true);
+    //mainWindow.maximize();
+    //mainWindow.setFullScreen(true);
     mainWindow.loadURL('file://' + __dirname + '/client/index.html');
 
     mainWindow.on('closed', function() {

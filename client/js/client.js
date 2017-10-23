@@ -14,7 +14,7 @@ const { dialog, Menu } = remote;
 const fs = require('fs');
 const win = remote.getCurrentWindow();
 window.$ = window.jQuery = require('jquery');
-win.toggleDevTools()
+//win.toggleDevTools()
 
 const clientConfig = require('../config/client.json')
 
@@ -26,16 +26,16 @@ $(() => {
     const $MenuButton = $("#MenuButton")
     var Plugins = [];
     var Messages = [];
-    var MesMaxwidth = mainImg.width()
+    var MesMaxwidth = mainImg.width() + 100
 
-    function WindowResize() {
-        resizeTo(MesMaxwidth + 100, mainImg.height())
+    function WindowResize(reset = false) {
+        resizeTo((reset) ? mainImg.width() : MesMaxwidth, mainImg.height())
     }
 
     const observer = new MutationObserver((MutaionRecords, MutaionObserver) => {
-        WindowResize()
+        WindowResize(true)
     })
-    WindowResize()
+    WindowResize(true)
     observer.observe(document.body, { childList: true, attributes: true, subtree: true })
 
     function pushMessage(el, timer = false) {
@@ -49,7 +49,7 @@ $(() => {
         messageDiv.css({ top: clientConfig.message.top, left: mainImg.width() + clientConfig.message.left })
         messageDiv.hide();
         $Mascot.append(messageDiv)
-        var l = mainImg.width() + clientConfig.message.left + messageDiv.width() + 14 + 16 + 15
+        var l = mainImg.width() + clientConfig.message.left + messageDiv.width() + 100
         MesMaxwidth = MesMaxwidth < l ? l : MesMaxwidth;
         WindowResize()
 
@@ -78,6 +78,7 @@ $(() => {
 
     function deleteMessage(d) {
         var index = d._index
+        WindowResize(true)
         if (!Messages[index] || Messages[index]._uid !== d._uid) { return }
         Messages[index].fadeOut(clientConfig.message.visibleTime, () => {
             Messages[index] && Messages[index].remove()
@@ -85,20 +86,30 @@ $(() => {
         })
     }
 
-    $($MenuButton).on('click', (event) => {
+    $("#MenuButton").on('click', (event) => {
         event.preventDefault();
-        var menu = [{
-            label: "プラグイン",
-            submenu: [{
-                label: "なし"
-            }]
-        }];
+        var menu = [
+            {
+                label: "プラグイン",
+                submenu: [{
+                    label: "なし"
+                }]
+            },
+            {
+                label: "開発者ツール",
+                role: 'toggledevtools'
+            },
+            {
+                label: "終了",
+                role: 'quit'
+            }
+        ];
         if (Plugins.length != 0) {
             menu[0].submenu = Plugins.map((plugin) => {
                 return plugin.menu();
             })
         }
-        console.log(menu)
+        //console.log(menu)
         Menu.buildFromTemplate(menu).popup()
     });
 
