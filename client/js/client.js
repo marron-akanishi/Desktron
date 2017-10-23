@@ -26,16 +26,16 @@ $(() => {
     const $MenuButton = $("#MenuButton")
     var Plugins = [];
     var Messages = [];
-    var MesMaxwidth = mainImg.width() + 100
+    var MesMaxwidth = mainImg.width()
 
-    function WindowResize(reset = false) {
-        resizeTo((reset) ? mainImg.width() : MesMaxwidth, mainImg.height())
+    function WindowResize() {
+        resizeTo(MesMaxwidth, mainImg.height())
     }
 
     const observer = new MutationObserver((MutaionRecords, MutaionObserver) => {
-        WindowResize(true)
+        WindowResize()
     })
-    WindowResize(true)
+    WindowResize()
     observer.observe(document.body, { childList: true, attributes: true, subtree: true })
 
     function pushMessage(el, timer = false) {
@@ -78,12 +78,24 @@ $(() => {
 
     function deleteMessage(d) {
         var index = d._index
-        WindowResize(true)
-        if (!Messages[index] || Messages[index]._uid !== d._uid) { return }
-        Messages[index].fadeOut(clientConfig.message.visibleTime, () => {
-            Messages[index] && Messages[index].remove()
-            Messages.splice(index, 1)
+        var max = 0;
+        window.Messages = Messages
+        Messages.forEach((m, i) => {
+            if (m._uid === d._uid) {
+                d.fadeOut(clientConfig.message.visibleTime, () => {
+                    d.remove();
+                })
+                console.log(Messages)
+                Messages.splice(i, 1)
+                console.log(Messages)
+            } else {
+                var l = clientConfig.message.left + m.width() + 100
+                max = max < l ? l : max;
+            }
         })
+        MesMaxwidth = max + mainImg.width();
+        console.log(MesMaxwidth)
+        WindowResize()
     }
 
     $("#MenuButton").on('click', (event) => {

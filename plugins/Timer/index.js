@@ -30,10 +30,13 @@ module.exports.prototype.Regist = function() {
 
     function input() {
         var text = $input.val()
+        
         that.handler.deleteMessage(firstMessage)
         that.handler.deleteMessage(form)
-        that.handler.pushMessage(that.config.message.reservated.replace("%s", text))
-        that.addTimer(that.parseTimer(text),text)
+        if(that.parseTimer(text) != 0){
+            that.handler.pushMessage(that.config.message.reservated.replace("%s", text))
+            that.addTimer(that.parseTimer(text),text)
+        }
     }
 
     $input.on('keydown', (e) => {
