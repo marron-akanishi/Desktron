@@ -2,10 +2,10 @@
 	"consumerKey":"cEt5VnB3sEX8ekNnE1lu20nFg",
 	"consumerKeySecret":"ZoR54hRsOR9frCgiunuM4zfI4yIMEzlCZHf5a3UWF0mV5cSJdv",
 	"message":{
-		"inputPIN":"PIN番号を入力してください。",
-		"oAuthed":"認証されました。",
-		"favorite":"%fromさんが、ツイートをお気に入りしました。",
-		"retweet":"%formさんが、ツイートをRTしました。",
+		"inputPIN":"PIN番号を入力してね。",
+		"oAuthed":"認証出来たよ。",
+		"favorite":"%fromさんが、ツイートをお気に入りしたよ。",
+		"retweet":"%formさんが、ツイートをRTしたよ。",
 		"messageCss":{
 			"fontSize":"10pt"
 		}

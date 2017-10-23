@@ -5,14 +5,8 @@
 }
 body{
 	margin: 0px;
-	position: fixed;
-}
-img{
-    -webkit-app-region: drag;
-    /*-webkit-user-select: none;*/
-}
-body{
-	background-color: rgba(0,0,0,0);
+    position: fixed;
+    background-color: rgba(0,0,0,0);
 }
 #Message{
 	width: auto;

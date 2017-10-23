@@ -49,7 +49,7 @@ $(() => {
         messageDiv.css({ top: clientConfig.message.top, left: mainImg.width() + clientConfig.message.left })
         messageDiv.hide();
         $Mascot.append(messageDiv)
-        var l = mainImg.width() + clientConfig.message.left + messageDiv.width() + 100
+        var l = mainImg.width() + clientConfig.message.left + messageDiv.width() + 14 + 16 + 15
         MesMaxwidth = MesMaxwidth < l ? l : MesMaxwidth;
         WindowResize()
 
@@ -89,7 +89,7 @@ $(() => {
                 Messages.splice(i, 1)
                 console.log(Messages)
             } else {
-                var l = clientConfig.message.left + m.width() + 100
+                var l = clientConfig.message.left + m.width() + 14 + 16 + 15
                 max = max < l ? l : max;
             }
         })

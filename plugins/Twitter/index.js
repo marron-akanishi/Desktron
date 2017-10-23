@@ -16,6 +16,9 @@ module.exports = function Timer(handler, config) {
     this.config = config
     this.handler = handler
     $ = handler.$
+    this.noticeStream = null
+    this.notice = false
+    this.client = null;
     var data = this.handler.localStorage.getItem("Twitter")
     if (!data) {
         this.oauthed = false;
@@ -24,9 +27,6 @@ module.exports = function Timer(handler, config) {
         this.oauthed = true;
         this.tokens = JSON.parse(data);
     }
-    this.noticeStream = null
-    this.notice = false
-    this.client = null;
     (function($) {
         var escapes = {
                 '&': '&amp;',
@@ -130,8 +130,6 @@ module.exports.prototype.menu = function() {
                 that.notice = !that.notice;
                 if (that.notice) {
                     that.startListen();
-                } else {
-
                 }
             }
         }]
@@ -146,6 +144,26 @@ module.exports.prototype.menu = function() {
 
 module.exports.prototype.startListen = function() {
     var that = this
+
+    function showMes(data, text){
+        console.log(typeof text)
+        var $form = $('<div></div>');
+        var from = data.source.name;
+        var $tweet = $('<div></div>');
+        var $pic = $('<img></img>')
+        $pic.attr({ src: data.source.profile_image_url })
+        $pic.css({ float: 'left' });
+        $form.append($pic)
+        var $mes = $('<div></div>');
+        $mes.textWithLF(text.replace('%from', from));
+        $form.append($mes);
+        $form.append($('<br>'));
+        $form.css(that.config.message.messageCss);
+        $tweet.text(data.target_object.text)
+        $form.append($tweet)
+        that.handler.pushMessage($form)
+    }    
+
     if (!that.client) {
         that.client = new Twitter({
             consumer_key: that.config.consumerKey,
@@ -156,24 +174,12 @@ module.exports.prototype.startListen = function() {
     }
     if (that.noticeStream)
         that.noticeStream.stop();
-    that.noticebStream = that.client.stream('user')
-    that.noticebStream.on('favorite', (data) => {
-        console.log(data)
-        var $form = $('<div></div>');
-        var from = data.source.name;
-        var $tweet = $('<div></div>');
-        var $pic = $('<img></img>')
-        $pic.attr({ src: data.source.profile_image_url })
-        $pic.css({ float: 'left' });
-        $form.append($pic)
-        var $mes = $('<div></div>');
-        $mes.textWithLF(that.config.message.favorite.replace('%from', from));
-        $form.append($mes);
-        $form.append($('<br>'));
-        $form.css(that.config.message.messageCss);
-        $tweet.text(data.target_object.text)
-        $form.append($tweet)
-        that.handler.pushMessage($form)
+    that.noticeStream = that.client.stream('user')
+    that.noticeStream.on('favorite', function(data) {
+        showMes(data, String(that.config.message.favorite));
+    })
+    that.noticeStream.on('retweet', function(data) {
+        showMes(data, String(that.config.message.retweet));
     })
 }
 

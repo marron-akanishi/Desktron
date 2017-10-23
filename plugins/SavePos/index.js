@@ -14,7 +14,8 @@ module.exports = function Timer(handler, config) {
 
 module.exports.prototype.menu = function(){
     var menu = {
-        label: "SavePos"
+        label: "SavePos",
+        visible: false
     }
     return menu
 }
