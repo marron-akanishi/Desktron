@@ -170,7 +170,7 @@ module.exports.prototype.startListen = function() {
         $mes.textWithLF(that.config.message.favorite.replace('%from', from));
         $form.append($mes);
         $form.append($('<br>'));
-        $form.css(that.config.message.favoriteCss);
+        $form.css(that.config.message.messageCss);
         $tweet.text(data.target_object.text)
         $form.append($tweet)
         that.handler.pushMessage($form)

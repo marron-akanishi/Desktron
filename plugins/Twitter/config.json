@@ -5,7 +5,8 @@
 		"inputPIN":"PIN番号を入力してください。",
 		"oAuthed":"認証されました。",
 		"favorite":"%fromさんが、ツイートをお気に入りしました。",
-		"favoriteCss":{
+		"retweet":"%formさんが、ツイートをRTしました。",
+		"messageCss":{
 			"fontSize":"10pt"
 		}
 	}
