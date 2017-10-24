@@ -1,25 +1,28 @@
 .dragin{
     -webkit-app-region: drag;
+    /*-webkit-user-select: none;*/
     float: left;
-    user-select: none;
 }
 body{
 	margin: 0px;
-    position: fixed;
-    background-color: rgba(0,0,0,0);
-    font-family: 'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN W3','メイリオ', Meiryo,'ＭＳ ゴシック', Arial;
+	position: fixed;
+}
+img{
+    -webkit-app-region: drag;
+    /*-webkit-user-select: none;*/
+}
+body{
+	background-color: rgba(0,0,0,0);
 }
 #Message{
 	width: auto;
 }
-#Clock{
-    top:1px;
-    background: #fff;
-    border: 2px solid #999;
-    padding: 10px;
-    border-radius: 5px;
-    clear: both;
-    user-select: none;
+
+#MenuButton{
+	position: absolute;
+	left:1px;
+	bottom: 1px;
+	-webkit-app-region: no-drag;
 }
 
 /*******************************
@@ -34,7 +37,7 @@ body{
     border-radius: 15px;
     /*margin-right: 20%;*/
     clear: both;
-    max-width: 500px;
+    max-width: 800px;
     float: right;
     white-space: nowrap;
 }
