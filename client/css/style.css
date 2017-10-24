@@ -1,7 +1,7 @@
 .dragin{
     -webkit-app-region: drag;
-    /*-webkit-user-select: none;*/
     float: left;
+    user-select: none;
 }
 body{
 	margin: 0px;
@@ -11,12 +11,17 @@ body{
 #Message{
 	width: auto;
 }
-
-#MenuButton{
-	position: absolute;
-	left:1px;
-	bottom: 1px;
-	-webkit-app-region: no-drag;
+#Clock{
+    left:1px;
+    top:1px;
+    background: #fff;
+    border: 1px solid #777;
+    padding: 10px;
+    border-radius: 5px;
+    clear: both;
+    white-space: nowrap;
+    font-size: 15pt;
+    user-select: none;
 }
 
 /*******************************
@@ -31,7 +36,7 @@ body{
     border-radius: 15px;
     /*margin-right: 20%;*/
     clear: both;
-    max-width: 800px;
+    max-width: 500px;
     float: right;
     white-space: nowrap;
 }

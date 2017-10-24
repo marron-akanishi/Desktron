@@ -24,19 +24,60 @@ $(() => {
     const mainImg = $(".dragin")
     const $Mascot = $("#Mascot")
     const $MenuButton = $("#MenuButton")
+    const $Clock = $("#Clock")
+    const cssWidth = 14 + 16 + 15
+    var MascotWidth = $Mascot.width();
     var Plugins = [];
     var Messages = [];
-    var MesMaxwidth = mainImg.width()
+    var MesMaxwidth = MascotWidth
 
     function WindowResize() {
-        resizeTo(MesMaxwidth, mainImg.height())
+        //console.log(MesMaxwidth)
+        resizeTo(MesMaxwidth, mainImg.height() + $Clock.height() + 30)
     }
 
     const observer = new MutationObserver((MutaionRecords, MutaionObserver) => {
         WindowResize()
     })
-    WindowResize()
     observer.observe(document.body, { childList: true, attributes: true, subtree: true })
+
+    function clock() {
+        var that = this
+        // 現在日時を取得
+        var d = new Date();
+
+        // デジタル時計を更新
+        updateDigitalClock(d);
+
+        // 次の「0ミリ秒」に実行されるよう、次の描画処理を予約
+        var delay = 1000 - new Date().getMilliseconds();
+        setTimeout(clock, delay);
+    }
+
+    function updateDigitalClock(d) {
+        var AA_str = ["日", "月", "火", "水", "木", "金", "土"];
+        var YYYY = d.getFullYear().toString();
+        var MM = d.getMonth() + 1;
+        var DD = d.getDate();
+        var AA = d.getDay();
+        var hh = d.getHours();
+        var mm = d.getMinutes();
+        var ss = d.getSeconds();
+
+        // 桁あわせ
+        if (MM < 10) { MM = "0" + MM; }
+        if (DD < 10) { DD = "0" + DD; }
+        if (hh < 10) { hh = "0" + hh; }
+        if (mm < 10) { mm = "0" + mm; }
+        if (ss < 10) { ss = "0" + ss; }
+
+        var text = YYYY + '/' + MM + '/' + DD + ' (' + AA_str[AA] + ')<br>' + hh + ':' + mm + ':' + ss
+        document.getElementById("Clock").innerHTML = text;
+    }
+    clock();
+    MascotWidth = $Mascot.width() > $Clock.width() ? $Mascot.width() : $Clock.width();
+    MesMaxwidth = MascotWidth
+    WindowResize();
 
     function pushMessage(el, timer = false) {
         var messageDiv = $("<p></p>");
@@ -46,10 +87,10 @@ $(() => {
         } else {
             messageDiv.html(el)
         }
-        messageDiv.css({ top: clientConfig.message.top, left: mainImg.width() + clientConfig.message.left })
+        messageDiv.css({ top: clientConfig.message.top + $Clock.height(), left: MascotWidth + clientConfig.message.left })
         messageDiv.hide();
         $Mascot.append(messageDiv)
-        var l = mainImg.width() + clientConfig.message.left + messageDiv.width() + 14 + 16 + 15
+        var l = MascotWidth + clientConfig.message.left + messageDiv.width() + cssWidth
         MesMaxwidth = MesMaxwidth < l ? l : MesMaxwidth;
         WindowResize()
 
@@ -89,16 +130,16 @@ $(() => {
                 Messages.splice(i, 1)
                 console.log(Messages)
             } else {
-                var l = clientConfig.message.left + m.width() + 14 + 16 + 15
+                var l = clientConfig.message.left + m.width() + cssWidth
                 max = max < l ? l : max;
             }
         })
-        MesMaxwidth = max + mainImg.width();
+        MesMaxwidth = max + MascotWidth;
         console.log(MesMaxwidth)
         WindowResize()
     }
 
-    $("#MenuButton").on('click', (event) => {
+    $("#Clock").bind('contextmenu', (event) => {
         event.preventDefault();
         var menu = [
             {
@@ -108,8 +149,8 @@ $(() => {
                 }]
             },
             {
-                label: "開発者ツール",
-                role: 'toggledevtools'
+                label: "再読み込み",
+                role: 'reload'
             },
             {
                 label: "終了",

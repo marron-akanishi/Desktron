@@ -19,14 +19,16 @@ module.exports = function Timer(handler, config) {
     this.noticeStream = null
     this.notice = false
     this.client = null;
-    var data = this.handler.localStorage.getItem("Twitter")
+    var data = this.handler.localStorage.getItem("TwitterAPI")
     if (!data) {
         this.oauthed = false;
         this.tokens = {};
     } else {
         this.oauthed = true;
         this.tokens = JSON.parse(data);
+        this.notice = true
     }
+
     (function($) {
         var escapes = {
                 '&': '&amp;',
@@ -113,6 +115,7 @@ module.exports = function Timer(handler, config) {
             return '0' == result && 1 / value == -(1 / 0) ? '-0' : result;
         }
     })(jQuery);
+    if(this.notice) this.startListen();
 }
 
 
@@ -146,14 +149,16 @@ module.exports.prototype.startListen = function() {
     var that = this
 
     function showMes(data, text){
-        console.log(typeof text)
+        var myname = that.handler.localStorage.getItem("TwitterName")
         var $form = $('<div></div>');
         var from = data.source.name;
+        //console.log(myname)
+        if (from == myname){return;}
         var $tweet = $('<div></div>');
         var $pic = $('<img></img>')
         $pic.attr({ src: data.source.profile_image_url })
         $pic.css({ float: 'left' });
-        $form.append($pic)
+        //$form.append($pic)
         var $mes = $('<div></div>');
         $mes.textWithLF(text.replace('%from', from));
         $form.append($mes);
@@ -171,6 +176,12 @@ module.exports.prototype.startListen = function() {
             access_token: that.tokens.accessTokenKey,
             access_token_secret: that.tokens.accessTokenSecret
         })
+        if(!that.handler.localStorage.getItem("TwitterName")){
+            that.client.get('account/verify_credentials', function (error, data) {
+                if (error) throw error;
+                that.handler.localStorage.setItem("TwitterName",data.name);
+            })
+        }
     }
     if (that.noticeStream)
         that.noticeStream.stop();
@@ -222,8 +233,10 @@ module.exports.prototype.oAuth = function() {
                 accessTokenKey: data.accessTokenKey,
                 accessTokenSecret: data.accessTokenSecret
             }
-            this.handler.localStorage.setItem('Twitter', JSON.stringify(this.tokens))
+            this.handler.localStorage.setItem('TwitterAPI', JSON.stringify(this.tokens))
             this.handler.pushMessage(this.config.message.oAuthed)
+            this.notice = true;
+            this.startListen();
         })
         .catch((err) => {
             console.log(err)
