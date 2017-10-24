@@ -6,7 +6,7 @@
 /*   By: anonymous <anonymous@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/21 11:00:08 by anonymous         #+#    #+#             */
-/*   Updated: 2017/10/22 19:53:20 by anonymous        ###   ########.fr       */
+/*   Updated: 2017/10/24 16:31:39 by anonymous        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 const { remote } = require('electron');
@@ -24,59 +24,24 @@ $(() => {
     const mainImg = $(".dragin")
     const $Mascot = $("#Mascot")
     const $MenuButton = $("#MenuButton")
-    const $Clock = $("#Clock")
-    const cssWidth = 14 + 16 + 15
-    var MascotWidth = $Mascot.width();
     var Plugins = [];
     var Messages = [];
-    var MesMaxwidth = MascotWidth
+    var MesMaxwidth = 0
 
     function WindowResize() {
-        //console.log(MesMaxwidth)
-        resizeTo(MesMaxwidth, mainImg.height() + $Clock.height() + 30)
+        // resizeTo(MesMaxwidth + 100, mainImg.height())
+
+        // console.log($().height
+        // $('body').css("background-color","green")
+
+        resizeTo($('body').width() + MesMaxwidth, $('body').height());
     }
 
     const observer = new MutationObserver((MutaionRecords, MutaionObserver) => {
         WindowResize()
     })
+    WindowResize()
     observer.observe(document.body, { childList: true, attributes: true, subtree: true })
-
-    function clock() {
-        var that = this
-        // 現在日時を取得
-        var d = new Date();
-
-        // デジタル時計を更新
-        updateDigitalClock(d);
-
-        // 次の「0ミリ秒」に実行されるよう、次の描画処理を予約
-        var delay = 1000 - new Date().getMilliseconds();
-        setTimeout(clock, delay);
-    }
-    function updateDigitalClock(d) {
-        var AA_str = ["日", "月", "火", "水", "木", "金", "土"];
-        var YYYY = d.getFullYear().toString();
-        var MM = d.getMonth() + 1;
-        var DD = d.getDate();
-        var AA = d.getDay();
-        var hh = d.getHours();
-        var mm = d.getMinutes();
-        var ss = d.getSeconds();
-
-        // 桁あわせ
-        if (MM < 10) { MM = "0" + MM; }
-        if (DD < 10) { DD = "0" + DD; }
-        if (hh < 10) { hh = "0" + hh; }
-        if (mm < 10) { mm = "0" + mm; }
-        if (ss < 10) { ss = "0" + ss; }
-
-        var text = YYYY + '/' + MM + '/' + DD + '(' + AA_str[AA] + ')<br>' + hh + ':' + mm + ':' + ss
-        document.getElementById("Clock").innerHTML = text;
-    }
-    clock();
-    MascotWidth = $Mascot.width() > $Clock.width() ? $Mascot.width() : $Clock.width();
-    MesMaxwidth = MascotWidth
-    WindowResize();
 
     function pushMessage(el, timer = false) {
         var messageDiv = $("<p></p>");
@@ -86,10 +51,10 @@ $(() => {
         } else {
             messageDiv.html(el)
         }
-        messageDiv.css({ top: clientConfig.message.top + $Clock.height(), left: MascotWidth + clientConfig.message.left })
+        messageDiv.css({ top: clientConfig.message.top, left: mainImg.width() + clientConfig.message.left })
         messageDiv.hide();
         $Mascot.append(messageDiv)
-        var l = MascotWidth + clientConfig.message.left + messageDiv.width() + cssWidth
+        var l = clientConfig.message.left + messageDiv.width() + 14 + 16 + 15
         MesMaxwidth = MesMaxwidth < l ? l : MesMaxwidth;
         WindowResize()
 
@@ -125,43 +90,39 @@ $(() => {
                 d.fadeOut(clientConfig.message.visibleTime, () => {
                     d.remove();
                 })
-                console.log(Messages)
                 Messages.splice(i, 1)
-                console.log(Messages)
             } else {
-                var l = clientConfig.message.left + m.width() + cssWidth
+                var l = clientConfig.message.left + m.width() + 14 + 16 + 15
                 max = max < l ? l : max;
             }
         })
-        MesMaxwidth = max + MascotWidth;
+        MesMaxwidth = max;
         console.log(MesMaxwidth)
         WindowResize()
     }
 
-    $("#Clock").bind('contextmenu', (event) => {
+    $MenuButton.on('click', (event) => {
         event.preventDefault();
-        var menu = [
-            {
-                label: "プラグイン",
-                submenu: [{
-                    label: "なし"
-                }]
-            },
-            {
-                label: "再読み込み",
-                role: 'reload'
-            },
-            {
-                label: "終了",
-                role: 'quit'
-            }
+        var menu = [{
+            label: "プラグイン",
+            submenu: [{
+                label: "なし"
+            }]
+        },
+        {
+            label: "再読み込み",
+            role: 'reload'
+        },
+        {
+            label: "終了",
+            role: 'quit'
+        }
         ];
         if (Plugins.length != 0) {
             menu[0].submenu = Plugins.map((plugin) => {
                 return plugin.menu();
             })
         }
-        //console.log(menu)
         Menu.buildFromTemplate(menu).popup()
     });
 

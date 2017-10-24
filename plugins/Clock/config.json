@@ -1,0 +1,12 @@
+{
+    "css":
+    {
+        "top": "1px",
+        "background": "#fff",
+        "border": "2 px solid #999",
+        "padding": "10px",
+        "border-radius": "5px",
+        "clear": "both",
+        "user-select": "none"
+    }
+}
