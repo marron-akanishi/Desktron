@@ -2,7 +2,7 @@ module.exports = function SavePos(handler, config) {
     this.config = config
     this.handler = handler
     $ = handler.$
-    var win = remote.getCurrentWindow();
+    var win = handler.remote.getCurrentWindow();
     if (handler.localStorage.getItem("windowPosition")) {
         var pos = JSON.parse(handler.localStorage.getItem("windowPosition"));
         win.setPosition(pos[0], pos[1]);
