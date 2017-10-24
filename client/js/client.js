@@ -53,7 +53,6 @@ $(() => {
         var delay = 1000 - new Date().getMilliseconds();
         setTimeout(clock, delay);
     }
-
     function updateDigitalClock(d) {
         var AA_str = ["日", "月", "火", "水", "木", "金", "土"];
         var YYYY = d.getFullYear().toString();
@@ -71,7 +70,7 @@ $(() => {
         if (mm < 10) { mm = "0" + mm; }
         if (ss < 10) { ss = "0" + ss; }
 
-        var text = YYYY + '/' + MM + '/' + DD + ' (' + AA_str[AA] + ')<br>' + hh + ':' + mm + ':' + ss
+        var text = YYYY + '/' + MM + '/' + DD + '(' + AA_str[AA] + ')<br>' + hh + ':' + mm + ':' + ss
         document.getElementById("Clock").innerHTML = text;
     }
     clock();

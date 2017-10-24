@@ -7,20 +7,18 @@ body{
 	margin: 0px;
     position: fixed;
     background-color: rgba(0,0,0,0);
+    font-family: 'Hiragino Kaku Gothic ProN','ヒラギノ角ゴ ProN W3','メイリオ', Meiryo,'ＭＳ ゴシック', Arial;
 }
 #Message{
 	width: auto;
 }
 #Clock{
-    left:1px;
     top:1px;
     background: #fff;
-    border: 1px solid #777;
+    border: 2px solid #999;
     padding: 10px;
     border-radius: 5px;
     clear: both;
-    white-space: nowrap;
-    font-size: 15pt;
     user-select: none;
 }
 
