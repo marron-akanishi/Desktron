@@ -12,7 +12,7 @@
 const TwitterPinAuth = require('twitter-pin-auth');
 const Twitter = require('twit');
 
-module.exports = function Timer(handler, config) {
+module.exports = function Twitter(handler, config) {
     this.config = config
     this.handler = handler
     $ = handler.$
@@ -125,17 +125,23 @@ module.exports.prototype.menu = function() {
         label: "Twitter"
     }
     if (this.oauthed) {
-        menu.submenu = [{
-            label: "通知",
-            type: "checkbox",
-            checked: that.notice,
-            click() {
-                that.notice = !that.notice;
-                if (that.notice) {
-                    that.startListen();
+        menu.submenu = [
+            {
+                label: "通知",
+                type: "checkbox",
+                checked: that.notice,
+                click() {
+                    that.notice = !that.notice;
+                    if (that.notice) {
+                        that.startListen();
+                    }
                 }
+            },
+            {
+                label: "ツイート",
+                click: () => { that.tweet() }
             }
-        }]
+        ]
     } else {
         menu.submenu = [{
             label: "認証",
@@ -189,8 +195,51 @@ module.exports.prototype.startListen = function() {
     that.noticeStream.on('favorite', function(data) {
         showMes(data, String(that.config.message.favorite));
     })
-    that.noticeStream.on('retweet', function(data) {
+    that.noticeStream.on('retweeted_retweet favorited_retweet', function(data) {
         showMes(data, String(that.config.message.retweet));
+    })
+}
+
+module.exports.prototype.tweet = function(){
+    var firstMessage = this.handler.pushMessage(this.config.message.tweet, true);
+    var $content = $('<div></div>')
+    var $input = $('<textarea></textarea>')
+    var $button = $('<input type="button" value="' + this.config.message.ui.set + '"></input>');
+    $content.append($input)
+    $content.append($button);
+
+    var form = this.handler.pushMessage($content, true)
+
+    var that = this
+
+    if (!that.client) {
+        that.client = new Twitter({
+            consumer_key: that.config.consumerKey,
+            consumer_secret: that.config.consumerKeySecret,
+            access_token: that.tokens.accessTokenKey,
+            access_token_secret: that.tokens.accessTokenSecret
+        })
+    }
+
+    function input() {
+        var text = $input.val()
+
+        that.handler.deleteMessage(firstMessage)
+        that.handler.deleteMessage(form)
+        if (text != "") {
+            that.handler.pushMessage(that.config.message.tweeted)
+            that.client.post('statuses/update', { status: text });
+        }
+    }
+
+    $input.on('keydown', (e) => {
+        if (event.ctrlKey && e.keyCode === 13){
+            input()
+            return false;
+        }
+    })
+    $button.on('click', () => {
+        input()
     })
 }
 

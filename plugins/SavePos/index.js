@@ -1,8 +1,8 @@
-module.exports = function Timer(handler, config) {
+module.exports = function SavePos(handler, config) {
     this.config = config
     this.handler = handler
     $ = handler.$
-    var win = require("electron").remote.getCurrentWindow();
+    var win = remote.getCurrentWindow();
     if (handler.localStorage.getItem("windowPosition")) {
         var pos = JSON.parse(handler.localStorage.getItem("windowPosition"));
         win.setPosition(pos[0], pos[1]);
@@ -15,7 +15,7 @@ module.exports = function Timer(handler, config) {
 module.exports.prototype.menu = function(){
     var menu = {
         label: "SavePos",
-        visible: false
+        enabled: false
     }
     return menu
 }
