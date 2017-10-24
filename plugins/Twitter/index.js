@@ -193,15 +193,12 @@ module.exports.prototype.startListen = function() {
         that.noticeStream.stop();
     that.noticeStream = that.client.stream('user')
     that.noticeStream.on('favorite', function(data) {
-        showMes(data, String(that.config.message.favorite));
-    })
-    that.noticeStream.on('retweeted_retweet favorited_retweet', function(data) {
-        showMes(data, String(that.config.message.retweet));
+        showMes(data, that.config.message.favorite);
     })
 }
 
 module.exports.prototype.tweet = function(){
-    var firstMessage = this.handler.pushMessage(this.config.message.tweet, true);
+    var firstMessage = this.handler.pushMessage(this.config.message.inputtweet, true);
     var $content = $('<div></div>')
     var $input = $('<textarea></textarea>')
     var $button = $('<input type="button" value="' + this.config.message.ui.set + '"></input>');
